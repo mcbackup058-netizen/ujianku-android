@@ -1,0 +1,30 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Keystore files (keep base64 encoded version only)
+debug.keystore
+my-upload-key.jks
+*.jks
+*.keystore
+
+# Environment files
+.env
+
+# Build outputs
+app/build/
+build/
+
+# Kotlin
+*.kotlin_module

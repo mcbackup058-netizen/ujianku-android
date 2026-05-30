@@ -1,0 +1,82 @@
+name: Build Release APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build UjianKu Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('**/*.gradle.kts', '**/libs.versions.toml') }}
+          restore-keys: gradle-
+
+      - name: Decode debug keystore
+        run: base64 -d debug.keystore.base64 > debug.keystore
+
+      - name: Create .env file
+        run: |
+          cat > .env << 'ENVEOF'
+          DB_URL=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres
+          DB_USER=postgres.uvlotwysjpdywyhuyllk
+          DB_PASSWORD=@Dilarang99
+          ENVEOF
+
+      - name: Grant Execute Permission to gradlew
+        run: chmod +x gradlew
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Prepare Build Artifacts
+        run: |
+          mkdir -p release-artifacts
+          find app/build/outputs/apk/release/ -name "*.apk" -exec cp {} release-artifacts/ \;
+          find app/build/outputs/apk/debug/ -name "*.apk" -exec cp {} release-artifacts/ \;
+          cd release-artifacts
+          for f in *-release*.apk; do
+            if [ -f "$f" ]; then mv "$f" "UjianKu-Release.apk"; fi
+          done
+          for f in *-debug*.apk; do
+            if [ -f "$f" ]; then mv "$f" "UjianKu-Debug.apk"; fi
+          done
+          cd ..
+          ls -la release-artifacts/
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: UjianKu-Release-APK
+          path: release-artifacts/UjianKu-Release.apk
+          retention-days: 30
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: UjianKu-Debug-APK
+          path: release-artifacts/UjianKu-Debug.apk
+          retention-days: 30

@@ -1,0 +1,6 @@
+{
+  "name": "UjianKu",
+  "description": "Indonesian online exam platform with real-time proctor monitoring and anti-cheat window-unfocus tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
