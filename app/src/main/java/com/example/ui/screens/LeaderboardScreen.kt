@@ -423,7 +423,7 @@ private fun PodiumEntryCard(
         modifier = Modifier
             .fillMaxWidth()
             .then(
-                if (isCurrentUser) Modifier.border(BorderStroke(2.dp), RoundedCornerShape(14.dp)) else Modifier
+                if (isCurrentUser) Modifier.border(BorderStroke(2.dp, MaterialTheme.colorScheme.primary), RoundedCornerShape(14.dp)) else Modifier
             ),
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
@@ -558,7 +558,7 @@ private fun RankingListCard(
                     Box(
                         modifier = Modifier
                             .fillMaxHeight()
-                            .fillMaxWidth((entry.score / 100f).coerceIn(0f, 1f))
+                            .fillMaxWidth((entry.score / 100.0).coerceIn(0.0, 1.0).toFloat())
                             .background(
                                 if (entry.score >= 80) SoftGreen
                                 else if (entry.score >= 60) SmoothYellow

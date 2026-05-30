@@ -274,7 +274,7 @@ fun ProfileScreen(viewModel: UjianViewModel) {
                             verticalAlignment = Alignment.Bottom
                         ) {
                             recentScores.forEachIndexed { index, score ->
-                                val barHeight = (score / 100f * 120f).coerceIn(8f, 120f)
+                                val barHeight = (score / 100.0 * 120.0).coerceIn(8.0, 120.0).toFloat()
                                 val barColor = when {
                                     score >= 80 -> SoftGreen
                                     score >= 60 -> SmoothYellow
@@ -329,12 +329,14 @@ fun ProfileScreen(viewModel: UjianViewModel) {
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
+            data class Achievement(val title: String, val desc: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val color: Color)
+
             val achievements = buildList {
-                if (totalTaken >= 1) add(Triple("Peserta Ujian", "Menyelesaikan ujian pertama", Icons.Default.AssignmentTurnedIn, SoftGreen))
-                if (totalTaken >= 3) add(Triple("Rajin Belajar", "Menyelesaikan 3 ujian", Icons.Default.School, SmoothYellow))
-                if (highestScore >= 90) add(Triple("Siswa Berprestasi", "Mendapatkan nilai 90+", Icons.Default.EmojiEvents, Color(0xFFFFD700)))
-                if (violationCount == 0 && totalTaken > 0) add(Triple("Jujur dan Amanah", "Zero pelanggaran integritas", Icons.Default.VerifiedUser, SoftGreen))
-                if (averageScore >= 80) add(Triple("Konsisten Unggul", "Rata-rata nilai 80+", Icons.Default.TrendingUp, SmoothYellow))
+                if (totalTaken >= 1) add(Achievement("Peserta Ujian", "Menyelesaikan ujian pertama", Icons.Default.AssignmentTurnedIn, SoftGreen))
+                if (totalTaken >= 3) add(Achievement("Rajin Belajar", "Menyelesaikan 3 ujian", Icons.Default.School, SmoothYellow))
+                if (highestScore >= 90) add(Achievement("Siswa Berprestasi", "Mendapatkan nilai 90+", Icons.Default.EmojiEvents, Color(0xFFFFD700)))
+                if (violationCount == 0 && totalTaken > 0) add(Achievement("Jujur dan Amanah", "Zero pelanggaran integritas", Icons.Default.VerifiedUser, SoftGreen))
+                if (averageScore >= 80) add(Achievement("Konsisten Unggul", "Rata-rata nilai 80+", Icons.Default.TrendingUp, SmoothYellow))
             }
 
             if (achievements.isEmpty()) {
@@ -371,7 +373,8 @@ fun ProfileScreen(viewModel: UjianViewModel) {
                     }
                 }
             } else {
-                achievements.forEach { (title, desc, icon, color) ->
+                achievements.forEach { achievement ->
+                    val (title, desc, icon, color) = achievement
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()

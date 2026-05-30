@@ -142,7 +142,7 @@ class UjianViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // Exam schedules
-    val activeSchedules: StateFlow<List<ExamScheduleEntity>> = repository.activeSchedules
+    val activeSchedules: StateFlow<List<ExamScheduleEntity>> = repository.getActiveSchedules()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
